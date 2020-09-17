@@ -7,7 +7,7 @@
 node_modules
 .npmrc
 
-packages/*/dist
+dist
 
 *.log
 .DS_Store
