@@ -118,10 +118,6 @@ export function useRect() {
   );
 
   useIsomorphicLayoutEffect(() => {
-    if (IS_SSR) {
-      return undefined;
-    }
-
     const globalEventListener = () => updateRect();
 
     GLOBAL_EVENTS.forEach((eventType) => {
