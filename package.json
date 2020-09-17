@@ -1,7 +1,7 @@
 {
   "name": "react-use-rect",
-  "version": "0.1.0-alpha.2",
-  "description": "Rect hook that measures target element boundaries",
+  "version": "0.1.0-alpha.3",
+  "description": "React hook that measures target element boundaries",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",
   "homepage": "https://github.com/d521bb85/react-use-rect",
