@@ -1,6 +1,6 @@
 {
   "name": "react-use-rect",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "description": "",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",
@@ -11,7 +11,7 @@
     "test": "tsdx test",
     "test:watch": "tsdx test --watch",
     "build": "npm run clean && tsdx build",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "lint-staged": {
     "./packages/**/*.{ts,tsx}": [
