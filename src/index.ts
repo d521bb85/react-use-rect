@@ -18,14 +18,6 @@ export interface Rect {
   y: number;
 }
 
-const IS_SSR = typeof window === 'undefined';
-
-const GLOBAL_EVENTS = ['resize', 'scroll', 'transitionend'];
-const GLOBAL_EVENT_CONFIG = {
-  capture: true,
-  passive: true
-};
-
 const DEFAULT_RECT: Rect = {
   bottom: 0,
   height: 0,
@@ -48,7 +40,7 @@ const RECT_KEYS: (keyof Rect)[] = [
   'y'
 ];
 
-function areRectsDiffer(rectA: Rect, rectB: Rect) {
+function areRectsDifferent(rectA: Rect, rectB: Rect) {
   for (const key of RECT_KEYS) {
     if (rectA[key] !== rectB[key]) {
       return true;
@@ -58,14 +50,20 @@ function areRectsDiffer(rectA: Rect, rectB: Rect) {
   return false;
 }
 
-const useIsomorphicLayoutEffect = IS_SSR ? useEffect : useLayoutEffect;
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 function useRerender() {
   const [, rerender] = useState({});
   return useCallback(() => rerender({}), []);
 }
 
-export function useRect() {
+export interface Options {
+  scroll?: boolean;
+  transitionEnd?: boolean;
+}
+
+export function useRect({ scroll = true, transitionEnd = true }: Options) {
   const resizeObserverRef = useRef<ResizeObserver>();
   const targetElementRef = useRef<Element>();
   const rectRef = useRef(DEFAULT_RECT);
@@ -94,7 +92,7 @@ export function useRect() {
       y: clientRect.y
     };
 
-    if (areRectsDiffer(rectRef.current, nextRect)) {
+    if (areRectsDifferent(rectRef.current, nextRect)) {
       rectRef.current = nextRect;
       rerender();
     }
@@ -119,25 +117,41 @@ export function useRect() {
 
   useIsomorphicLayoutEffect(() => {
     const globalEventListener = () => updateRect();
+    const globalEventConfig = {
+      capture: true,
+      passive: true
+    };
 
-    GLOBAL_EVENTS.forEach((eventType) => {
+    if (scroll) {
+      window.addEventListener('scroll', globalEventListener, globalEventConfig);
+    }
+
+    if (transitionEnd) {
       window.addEventListener(
-        eventType,
+        'transitionend',
         globalEventListener,
-        GLOBAL_EVENT_CONFIG
+        globalEventConfig
       );
-    });
+    }
 
     return () => {
-      GLOBAL_EVENTS.forEach((eventType) => {
+      if (scroll) {
         window.removeEventListener(
-          eventType,
+          'scroll',
           globalEventListener,
-          GLOBAL_EVENT_CONFIG
+          globalEventConfig
         );
-      });
+      }
+
+      if (transitionEnd) {
+        window.removeEventListener(
+          'transitionend',
+          globalEventListener,
+          globalEventConfig
+        );
+      }
     };
-  }, [updateRect]);
+  }, [scroll, transitionEnd, updateRect]);
 
   useIsomorphicLayoutEffect(updateRect);
 
