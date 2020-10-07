@@ -63,7 +63,7 @@ export interface Options {
   transitionEnd?: boolean;
 }
 
-export function useRect({ scroll = true, transitionEnd = true }: Options) {
+export function useRect({ scroll = true, transitionEnd = true }: Options = {}) {
   const resizeObserverRef = useRef<ResizeObserver>();
   const targetElementRef = useRef<Element>();
   const rectRef = useRef(DEFAULT_RECT);
