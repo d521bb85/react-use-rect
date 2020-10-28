@@ -59,11 +59,16 @@ function useRerender() {
 }
 
 export interface Options {
+  resize?: boolean;
   scroll?: boolean;
   transitionEnd?: boolean;
 }
 
-export function useRect({ scroll = true, transitionEnd = true }: Options = {}) {
+export function useRect({
+  resize = true,
+  scroll = true,
+  transitionEnd = true
+}: Options = {}) {
   const resizeObserverRef = useRef<ResizeObserver>();
   const targetElementRef = useRef<Element>();
   const rectRef = useRef(DEFAULT_RECT);
@@ -122,6 +127,10 @@ export function useRect({ scroll = true, transitionEnd = true }: Options = {}) {
       passive: true
     };
 
+    if (resize) {
+      window.addEventListener('resize', globalEventListener, globalEventConfig);
+    }
+
     if (scroll) {
       window.addEventListener('scroll', globalEventListener, globalEventConfig);
     }
@@ -135,6 +144,14 @@ export function useRect({ scroll = true, transitionEnd = true }: Options = {}) {
     }
 
     return () => {
+      if (resize) {
+        window.removeEventListener(
+          'resize',
+          globalEventListener,
+          globalEventConfig
+        );
+      }
+
       if (scroll) {
         window.removeEventListener(
           'scroll',
@@ -151,7 +168,7 @@ export function useRect({ scroll = true, transitionEnd = true }: Options = {}) {
         );
       }
     };
-  }, [scroll, transitionEnd, updateRect]);
+  }, [resize, scroll, transitionEnd, updateRect]);
 
   useIsomorphicLayoutEffect(updateRect);
 
