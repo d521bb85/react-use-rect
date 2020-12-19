@@ -8,6 +8,8 @@ node_modules
 .npmrc
 
 dist
+test/fixture/.dist
+test/fixture/.cache
 
 *.log
 .DS_Store
