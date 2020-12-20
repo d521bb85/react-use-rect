@@ -1,12 +1,8 @@
 # react-use-rect
 
-This hook measures a target element boundaries.
+This hook makes it easy to measure a DOM element boundaries (DOMRect).
 
-It updates the measure once:
-
-- the target element size changes;
-- the target element or it's ascendant elements scroll;
-- transitions end.
+It's especially useful when it's needed to re-measure boundaries when element size changes, window resizes, parent element scrolls or transition ends as well.
 
 ## Installation
 
@@ -21,28 +17,27 @@ import React from 'react';
 import { useRect } from 'react-use-rect';
 
 function Component() {
-  const [ref, rect] = useRect();
-
+  const [rect, ref] = useRect();
   return <div ref={ref} />;
 }
 ```
 
 ## Options
 
-The hook accepts an object of options as it's only argument.
+The hook accepts an object of options.
+
+```typescript
+useRect({ scroll: true, transitionEnd: true });
+```
 
 ### scroll
 
-_boolean_
+_default: false_
 
-default: true
-
-Enables listening to scroll changes.
+If enabled, element boundaries will be re-measured when the scroll took place.
 
 ### transitionEnd
 
-_boolean_
+_default: false_
 
-default: true
-
-Enables listening to transition ends.
+If enabled, element boundaries will be re-measured when transition ends.
