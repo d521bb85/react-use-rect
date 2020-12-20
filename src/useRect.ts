@@ -1,13 +1,12 @@
-// @ts-nocheck
-
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ResizeObserver } from '@juggle/resize-observer';
 import { DEFAULT_OPTIONS, DEFAULT_RECT } from './defaults';
 import { Options, Rect, Result } from './types';
 import {
   areRectsNotEqual,
   getElementRect,
   listenTo,
-  useIsomorphicEffect
+  useIsomorphicLayoutEffect
 } from './utils';
 
 export function useRect(options: Options = {}): Result {
@@ -29,26 +28,41 @@ export function useRect(options: Options = {}): Result {
     }
   }, [element, rect]);
 
-  useIsomorphicEffect(update);
+  useIsomorphicLayoutEffect(update);
 
   const updateRef = useRef(update);
   updateRef.current = update;
 
-  useIsomorphicEffect(() => {
+  useEffect(() => {
     return listenTo('resize', () => updateRef.current());
   });
 
-  useIsomorphicEffect(() => {
-    if (scroll) {
-      return listenTo('scroll', () => updateRef.current());
+  useEffect(() => {
+    if (!scroll) {
+      return;
     }
+
+    return listenTo('scroll', () => updateRef.current());
   }, [scroll]);
 
-  useIsomorphicEffect(() => {
-    if (transitionEnd) {
-      return listenTo('transitionend', () => updateRef.current());
+  useEffect(() => {
+    if (!transitionEnd) {
+      return;
     }
+
+    return listenTo('transitionend', () => updateRef.current());
   }, [transitionEnd]);
+
+  useEffect(() => {
+    if (!element) {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => updateRef.current());
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [element]);
 
   return [rect, setElement];
 }
