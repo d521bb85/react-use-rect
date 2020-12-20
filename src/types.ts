@@ -10,6 +10,8 @@ export interface Rect {
 }
 
 export interface Options {
-  scroll: boolean;
-  transitionEnd: boolean;
+  scroll?: boolean;
+  transitionEnd?: boolean;
 }
+
+export type Result = [Rect, (element: Element | null) => void];

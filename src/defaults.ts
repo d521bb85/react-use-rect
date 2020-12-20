@@ -1,6 +1,6 @@
 import { Rect, Options } from './types';
 
-export const DEFAULT_REACT: Rect = {
+export const DEFAULT_RECT: Rect = {
   bottom: 0,
   height: 0,
   left: 0,
@@ -11,7 +11,7 @@ export const DEFAULT_REACT: Rect = {
   y: 0
 };
 
-export const DEFAULT_OPTIONS: Options = {
+export const DEFAULT_OPTIONS: Required<Options> = {
   scroll: false,
   transitionEnd: false
 };

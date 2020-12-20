@@ -11,6 +11,6 @@ const RECT_KEYS: (keyof Rect)[] = [
   'y'
 ];
 
-export function areRectsDifferent(rectA: Rect, rectB: Rect) {
-  return RECT_KEYS.some((key) => rectA[key] !== rectB[key]);
+export function areRectsNotEqual(rectA: Rect, rectB: Rect) {
+  return rectA !== rectB && RECT_KEYS.some((key) => rectA[key] !== rectB[key]);
 }
