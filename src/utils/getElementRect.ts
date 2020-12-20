@@ -1,6 +1,25 @@
 import { Rect } from '../types';
 
 export function getElementRect(element: Element): Rect {
-  const { toJSON, ...rect } = element.getBoundingClientRect();
-  return rect;
+  const {
+    bottom,
+    height,
+    left,
+    right,
+    top,
+    width,
+    x,
+    y
+  } = element.getBoundingClientRect();
+
+  return {
+    bottom,
+    height,
+    left,
+    right,
+    top,
+    width,
+    x,
+    y
+  };
 }
