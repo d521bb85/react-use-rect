@@ -35,7 +35,7 @@ export function useRect(options: Options = {}): Result {
 
   useEffect(() => {
     return listenTo('resize', () => updateRef.current());
-  });
+  }, []);
 
   useEffect(() => {
     if (!scroll) {
