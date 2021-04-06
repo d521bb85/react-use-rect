@@ -64,5 +64,5 @@ export function useRect(options: Options = {}): Result {
     return () => observer.disconnect();
   }, [element]);
 
-  return [rect, setElement];
+  return [setElement, rect];
 }
