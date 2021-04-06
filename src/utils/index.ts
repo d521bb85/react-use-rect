@@ -1,4 +1,5 @@
 export * from './areRectsNotEqual';
 export * from './useIsomorphicLayoutEffect';
 export * from './getElementRect';
-export * from './listenTo';
+export * from './listenToWindow';
+export * from './doesEventTargetContainElement';
