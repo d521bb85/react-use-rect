@@ -28,10 +28,13 @@ export function useRect(options: Options = {}): Result {
     }
   }, [element, rect]);
 
-  useIsomorphicLayoutEffect(update);
-
   const updateRef = useRef(update);
-  updateRef.current = update;
+
+  useEffect(() => {
+    updateRef.current = update;
+  }, [update]);
+
+  useIsomorphicLayoutEffect(update);
 
   useEffect(() => {
     return listenTo('resize', () => updateRef.current());
