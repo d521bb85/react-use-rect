@@ -20,7 +20,7 @@ describe('useRect', () => {
     const testFn = jest.fn();
 
     function Component() {
-      const [rect, rectRef] = useRect();
+      const [rectRef, rect] = useRect();
       testFn(rect);
       return <div ref={rectRef} />;
     }
@@ -29,7 +29,7 @@ describe('useRect', () => {
     await waitFor(() => expect(testFn).toBeCalledWith(DEFAULT_RECT));
   });
 
-  it('should calc element rect', async () => {
+  it('should get element rect', async () => {
     const testFn = jest.fn();
 
     const fakeRect = {
@@ -46,7 +46,7 @@ describe('useRect', () => {
     mockRect(fakeRect);
 
     function Component() {
-      const [rect, rectRef] = useRect();
+      const [rectRef, rect] = useRect();
       testFn(rect);
       return <div ref={rectRef} />;
     }
@@ -59,7 +59,7 @@ describe('useRect', () => {
     const testFn = jest.fn();
 
     function Component() {
-      const [rect, rectRef] = useRect();
+      const [rectRef, rect] = useRect();
       testFn(rect);
       return <div ref={rectRef} />;
     }
@@ -87,7 +87,7 @@ describe('useRect', () => {
     const testFn = jest.fn();
 
     function Component() {
-      const [rect, rectRef] = useRect({ scroll: true });
+      const [rectRef, rect] = useRect({ scroll: true });
       testFn(rect);
       return <div ref={rectRef} />;
     }
@@ -115,7 +115,7 @@ describe('useRect', () => {
     const testFn = jest.fn();
 
     function Component() {
-      const [rect, rectRef] = useRect({ transitionEnd: true });
+      const [rectRef, rect] = useRect({ transitionEnd: true });
       testFn(rect);
       return <div ref={rectRef} />;
     }
@@ -158,7 +158,7 @@ describe('useRect', () => {
     const testFn = jest.fn();
 
     function Component() {
-      const [rect, rectRef] = useRect();
+      const [rectRef, rect] = useRect();
       testFn(rect);
       return <div ref={rectRef} />;
     }

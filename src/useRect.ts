@@ -5,8 +5,9 @@ import { Options, Rect, Result } from './types';
 import {
   areRectsNotEqual,
   getElementRect,
-  listenTo,
-  useIsomorphicLayoutEffect
+  listenToWindow,
+  useIsomorphicLayoutEffect,
+  doesEventTargetContainElement
 } from './utils';
 
 export function useRect(options: Options = {}): Result {
@@ -30,28 +31,43 @@ export function useRect(options: Options = {}): Result {
 
   useIsomorphicLayoutEffect(update);
 
+  // wrap the update function into a ref
+  // to avoid frequent events re-subscriptions
   const updateRef = useRef(update);
-  updateRef.current = update;
+  useEffect(() => {
+    updateRef.current = update;
+  }, [update]);
 
   useEffect(() => {
-    return listenTo('resize', () => updateRef.current());
-  });
+    return listenToWindow('resize', () => updateRef.current());
+  }, []);
 
   useEffect(() => {
     if (!scroll) {
       return;
     }
 
-    return listenTo('scroll', () => updateRef.current());
-  }, [scroll]);
+    return listenToWindow('scroll', ({ target }) => {
+      if (element && doesEventTargetContainElement(target, element)) {
+        updateRef.current();
+      }
+    });
+  }, [scroll, element]);
 
   useEffect(() => {
     if (!transitionEnd) {
       return;
     }
 
-    return listenTo('transitionend', () => updateRef.current());
-  }, [transitionEnd]);
+    return listenToWindow('transitionend', ({ target }) => {
+      if (
+        element &&
+        (target === element || doesEventTargetContainElement(target, element))
+      ) {
+        updateRef.current();
+      }
+    });
+  }, [transitionEnd, element]);
 
   useEffect(() => {
     if (!element) {
@@ -64,5 +80,5 @@ export function useRect(options: Options = {}): Result {
     return () => observer.disconnect();
   }, [element]);
 
-  return [rect, setElement];
+  return [setElement, rect];
 }

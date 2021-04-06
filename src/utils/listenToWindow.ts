@@ -3,7 +3,10 @@ const LISTENER_CONFIG = {
   passive: true
 };
 
-export function listenTo(eventType: string, listener: () => void) {
+export function listenToWindow<K extends keyof WindowEventMap>(
+  eventType: K,
+  listener: (event: WindowEventMap[K]) => void
+) {
   window.addEventListener(eventType, listener, LISTENER_CONFIG);
 
   return () => {

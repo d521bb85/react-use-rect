@@ -14,4 +14,4 @@ export interface Options {
   transitionEnd?: boolean;
 }
 
-export type Result = [Rect, (element: Element | null) => void];
+export type Result = [(element: Element | null) => void, Rect];
