@@ -1,10 +1,22 @@
 {
   "name": "react-use-rect",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Hook that measures element boundaries",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",
   "homepage": "https://github.com/d521bb85/react-use-rect",
+  "repository": "https://github.com/d521bb85/react-use-rect",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/react-use-rect.esm.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "keywords": [
+    "react",
+    "hooks"
+  ],
   "scripts": {
     "format": "prettier --write ./src",
     "lint": "eslint --fix ./src",
@@ -32,17 +44,6 @@
       "prettier --write"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/d521bb85/react-use-rect"
-  },
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "module": "dist/react-use-rect.esm.js",
-  "files": [
-    "dist",
-    "src"
-  ],
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"
   },
