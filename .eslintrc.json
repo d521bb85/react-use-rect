@@ -1,12 +1,26 @@
 {
-  "extends": [
-    "react-app",
-    "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
-  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "settings": {
     "react": {
-      "versions": "detect"
+      "version": "detect"
     }
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off"
   }
 }
