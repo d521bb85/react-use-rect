@@ -39,30 +39,34 @@ export function useRect(options: Options = {}): Result {
   }, [update]);
 
   useEffect(() => {
+    if (!element) {
+      return;
+    }
+
     return listenToWindow('resize', () => updateRef.current());
-  }, []);
+  }, [element]);
 
   useEffect(() => {
-    if (!scroll) {
+    if (!element || !scroll) {
       return;
     }
 
     return listenToWindow('scroll', ({ target }) => {
-      if (element && doesEventTargetContainElement(target, element)) {
+      if (doesEventTargetContainElement(target, element)) {
         updateRef.current();
       }
     });
   }, [scroll, element]);
 
   useEffect(() => {
-    if (!transitionEnd) {
+    if (!element || !transitionEnd) {
       return;
     }
 
     return listenToWindow('transitionend', ({ target }) => {
       if (
-        element &&
-        (target === element || doesEventTargetContainElement(target, element))
+        target === element ||
+        doesEventTargetContainElement(target, element)
       ) {
         updateRef.current();
       }
