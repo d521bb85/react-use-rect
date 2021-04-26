@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { DEFAULT_OPTIONS, DEFAULT_RECT } from './defaults';
-import { Options, Rect, Result } from './types';
+import { Options, Result } from './types';
 import {
   areRectsNotEqual,
   getElementRect,
@@ -11,41 +11,29 @@ import {
 } from './utils';
 
 export function useRect(options: Options = {}): Result {
-  const { scroll, transitionEnd } = { ...DEFAULT_OPTIONS, ...options };
+  const scroll = options.scroll ?? DEFAULT_OPTIONS.scroll;
+  const transitionEnd = options.transitionEnd ?? DEFAULT_OPTIONS.transitionEnd;
 
-  const [rect, setRect] = useState<Rect>(DEFAULT_RECT);
   const [element, setElement] = useState<Element | null>(null);
+  const [rect, setRect] = useState(DEFAULT_RECT);
 
-  const update = useCallback(() => {
-    if (!element) {
-      setRect(DEFAULT_RECT);
-      return;
-    }
+  const updateRect = useCallback(() => {
+    setRect((currentRect) => {
+      const nextRect = element ? getElementRect(element) : DEFAULT_RECT;
+      return areRectsNotEqual(currentRect, nextRect) ? nextRect : currentRect;
+    });
+  }, [element, setRect]);
 
-    const nextRect = getElementRect(element);
-
-    if (areRectsNotEqual(rect, nextRect)) {
-      setRect(nextRect);
-    }
-  }, [element, rect]);
-
-  useIsomorphicLayoutEffect(update);
-
-  // wrap the update function into a ref
-  // to avoid frequent events re-subscriptions
-  const updateRef = useRef(update);
-  useEffect(() => {
-    updateRef.current = update;
-  }, [update]);
-
+  // handle window resize
   useEffect(() => {
     if (!element) {
       return;
     }
 
-    return listenToWindow('resize', () => updateRef.current());
-  }, [element]);
+    return listenToWindow('resize', updateRect);
+  }, [element, updateRect]);
 
+  // handle scroll
   useEffect(() => {
     if (!element || !scroll) {
       return;
@@ -53,36 +41,37 @@ export function useRect(options: Options = {}): Result {
 
     return listenToWindow('scroll', ({ target }) => {
       if (doesEventTargetContainElement(target, element)) {
-        updateRef.current();
+        updateRect();
       }
     });
-  }, [scroll, element]);
+  }, [scroll, element, updateRect]);
 
+  // handle transitionend
   useEffect(() => {
     if (!element || !transitionEnd) {
       return;
     }
 
     return listenToWindow('transitionend', ({ target }) => {
-      if (
-        target === element ||
-        doesEventTargetContainElement(target, element)
-      ) {
-        updateRef.current();
+      if (target === element || doesEventTargetContainElement(target, element)) {
+        updateRect();
       }
     });
-  }, [transitionEnd, element]);
+  }, [transitionEnd, element, updateRect]);
 
+  // handle element resize
   useEffect(() => {
     if (!element) {
       return;
     }
 
-    const observer = new ResizeObserver(() => updateRef.current());
+    const observer = new ResizeObserver(updateRect);
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, [element]);
+  }, [element, updateRect]);
+
+  useIsomorphicLayoutEffect(updateRect);
 
   return [setElement, rect];
 }
