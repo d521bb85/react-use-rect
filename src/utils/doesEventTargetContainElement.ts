@@ -3,6 +3,7 @@ export function doesEventTargetContainElement(
   element: Element
 ) {
   return (
-    target === window || (target instanceof Node && target.contains(element))
+    (target === window && element.isConnected) ||
+    (target instanceof Node && target.contains(element))
   );
 }

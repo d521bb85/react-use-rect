@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
-import { DEFAULT_OPTIONS, DEFAULT_RECT } from './defaults';
-import { Options, Result } from './types';
+import { Rect, Options, Result } from './types';
 import {
   areRectsNotEqual,
   getElementRect,
@@ -10,16 +9,27 @@ import {
   doesEventTargetContainElement
 } from './utils';
 
+export const INITIAL_RECT: Rect = {
+  bottom: 0,
+  height: 0,
+  left: 0,
+  right: 0,
+  top: 0,
+  width: 0,
+  x: 0,
+  y: 0
+};
+
 export function useRect(options: Options = {}): Result {
-  const scroll = options.scroll ?? DEFAULT_OPTIONS.scroll;
-  const transitionEnd = options.transitionEnd ?? DEFAULT_OPTIONS.transitionEnd;
+  const scroll = Boolean(options.scroll);
+  const transitionEnd = Boolean(options.transitionEnd);
 
   const [element, setElement] = useState<Element | null>(null);
-  const [rect, setRect] = useState(DEFAULT_RECT);
+  const [rect, setRect] = useState(INITIAL_RECT);
 
   const updateRect = useCallback(() => {
     setRect((currentRect) => {
-      const nextRect = element ? getElementRect(element) : DEFAULT_RECT;
+      const nextRect = element ? getElementRect(element) : INITIAL_RECT;
       return areRectsNotEqual(currentRect, nextRect) ? nextRect : currentRect;
     });
   }, [element, setRect]);
@@ -53,7 +63,10 @@ export function useRect(options: Options = {}): Result {
     }
 
     return listenToWindow('transitionend', ({ target }) => {
-      if (target === element || doesEventTargetContainElement(target, element)) {
+      if (
+        target === element ||
+        doesEventTargetContainElement(target, element)
+      ) {
         updateRect();
       }
     });

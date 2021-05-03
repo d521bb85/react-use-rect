@@ -9,5 +9,9 @@ export function listenToWindow<K extends keyof WindowEventMap>(
 ) {
   window.addEventListener(eventType, listener, LISTENER_CONFIG);
 
-  return () => window.removeEventListener(eventType, listener, LISTENER_CONFIG);
+  function removeListener() {
+    window.removeEventListener(eventType, listener, LISTENER_CONFIG);
+  }
+
+  return removeListener;
 }

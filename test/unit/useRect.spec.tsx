@@ -2,7 +2,6 @@ import React from 'react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import * as RO from '@juggle/resize-observer';
 import { Rect } from '../../src/types';
-import { DEFAULT_RECT } from '../../src/defaults';
 import { useRect } from '../../src/useRect';
 
 function mockRect(fakeRect: Rect) {
@@ -26,7 +25,16 @@ describe('useRect', () => {
     }
 
     render(<Component />);
-    await waitFor(() => expect(testFn).toBeCalledWith(DEFAULT_RECT));
+    await waitFor(() => expect(testFn).toBeCalledWith({
+      bottom: 0,
+      height: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      width: 0,
+      x: 0,
+      y: 0
+    }));
   });
 
   it('should get element rect', async () => {
@@ -83,7 +91,7 @@ describe('useRect', () => {
     await waitFor(() => expect(testFn).toBeCalledWith(fakeRect));
   });
 
-  it('should update rect on window scroll', async () => {
+  it('should update rect on parent scroll', async () => {
     const testFn = jest.fn();
 
     function Component() {
@@ -107,11 +115,11 @@ describe('useRect', () => {
 
     mockRect(fakeRect);
 
-    fireEvent.scroll(window);
+    fireEvent.scroll(document.body);
     await waitFor(() => expect(testFn).toBeCalledWith(fakeRect));
   });
 
-  it('should update rect on window transitionEnd', async () => {
+  it('should update rect on parent transitionEnd', async () => {
     const testFn = jest.fn();
 
     function Component() {
@@ -120,7 +128,7 @@ describe('useRect', () => {
       return <div ref={rectRef} />;
     }
 
-    render(<Component />);
+    const { container } = render(<Component />);
 
     const fakeRect = {
       bottom: 4,
@@ -135,7 +143,7 @@ describe('useRect', () => {
 
     mockRect(fakeRect);
 
-    fireEvent.transitionEnd(window);
+    fireEvent.transitionEnd(container);
     await waitFor(() => expect(testFn).toBeCalledWith(fakeRect));
   });
 
