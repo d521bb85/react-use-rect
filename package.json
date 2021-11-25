@@ -1,6 +1,6 @@
 {
   "name": "react-use-rect",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0-alpha.1",
   "description": "Hook that measures element boundaries",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",

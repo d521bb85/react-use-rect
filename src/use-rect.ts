@@ -71,7 +71,7 @@ export function useRect(
         resizeObserverRef.current.disconnect();
       }
     };
-  });
+  }, []);
 
   const setElement = useCallback((element: Element | null) => {
     elementRef.current = element;
