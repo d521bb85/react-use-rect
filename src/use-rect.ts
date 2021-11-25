@@ -1,6 +1,15 @@
 import { useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 
-export type Rect = { [K in typeof RECT_KEYS[number]]: number };
+export interface Rect {
+  bottom: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+  x: number;
+  y: number;
+}
 
 export type DispatchChange = (rect: Rect) => void;
 
