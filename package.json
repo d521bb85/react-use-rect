@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "prepare": "husky install",
-    "build": "make"
+    "build": "make",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "react": "^17.0.2"
