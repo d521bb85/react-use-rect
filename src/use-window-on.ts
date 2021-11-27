@@ -4,16 +4,16 @@ export function useWindowOn<T extends keyof WindowEventMap>(
   eventType: T,
   callback: (event: WindowEventMap[T]) => void
 ) {
-  if (typeof window === undefined) {
-    return;
-  }
-
   const callbackRef = useRef(callback);
   useEffect(() => {
     callbackRef.current = callback;
   });
 
   useEffect(() => {
+    if (typeof window === undefined) {
+      return undefined;
+    }
+
     const listener = (event: WindowEventMap[T]) => {
       callbackRef.current(event);
     };
