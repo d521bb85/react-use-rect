@@ -42,7 +42,7 @@ useRect(setRect, { resize: true });
 
 Well, `resize` is the one and the only option supported.
 
-### Updating a bounding rect manually
+### Updating a bounding rect
 
 There a certain scenarios when you may want to re-measure a bounding rect. And it tries to cover them all introducing `revalidateRect` function as well as `useWindowOn` hook which simplifies adding an event listener to a `window`.
 
@@ -50,16 +50,25 @@ Let's take a closer look at it.
 
 ```typescript
 import React, { useState } from 'react';
-import { Rect, useRect } from 'react-use-rect';
+import { Rect, useRect, useWindowOn } from 'react-use-rect';
 
-function Example() {
+function Example2() {
   const [rect, setRect] = useState<Rect | undefined>();
-  const [rectRef] = useRect(setRect);
+  const [rectRef, revalidateRect] = useRect(setRect);
+  useWindowOn('scroll', revalidateRect);
 
   return (
     <div ref={rectRef}>
-      {rect && <span>Passing coordinates ${rect.top}px wide!</span>}
+      {rect && (
+        <span>
+          Passing coordinates: [${rect.left}, ${rect.top}px].
+        </span>
+      )}
     </div>
   );
 }
 ```
+
+The component we've created above will update the coordinates it shows whenever it's bounding rect changes after a document or any of it's drescendant elements scrolls.
+
+You can call `revalidateRect` manually when you want to re-measure an element's bounding rect and if it changed you'll know it.
