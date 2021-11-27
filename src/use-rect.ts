@@ -45,11 +45,22 @@ export function useRect(
       return;
     }
 
-    const nextRect = getRect(elementRef.current);
+    const nextRect = elementRef.current.getBoundingClientRect();
 
     if (shouldDispatchRectChange(rectRef.current, nextRect)) {
       rectRef.current = nextRect;
-      dispatchChangeRef.current(nextRect);
+
+      const { bottom, height, left, right, top, width, x, y } = nextRect;
+      dispatchChangeRef.current({
+        bottom,
+        height,
+        left,
+        right,
+        top,
+        width,
+        x,
+        y
+      });
     }
   }, []);
 
@@ -82,13 +93,6 @@ export function useRect(
   useIsomorphicLayoutEffect(revalidate);
 
   return [setElement, revalidate];
-}
-
-function getRect(element: Element): Rect {
-  const { bottom, height, left, right, top, width, x, y } =
-    element.getBoundingClientRect();
-
-  return { bottom, height, left, right, top, width, x, y };
 }
 
 const RECT_KEYS = [
