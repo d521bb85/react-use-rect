@@ -45,7 +45,7 @@ export function useRect(
       return;
     }
 
-    const nextRect = elementRef.current.getBoundingClientRect();
+    const nextRect = getRect(elementRef.current);
 
     if (shouldDispatchRectChange(rectRef.current, nextRect)) {
       rectRef.current = nextRect;
@@ -82,6 +82,13 @@ export function useRect(
   useIsomorphicLayoutEffect(revalidate);
 
   return [setElement, revalidate];
+}
+
+function getRect(element: Element): Rect {
+  const { bottom, height, left, right, top, width, x, y } =
+    element.getBoundingClientRect();
+
+  return { bottom, height, left, right, top, width, x, y };
 }
 
 const RECT_KEYS = [
