@@ -21,73 +21,77 @@ export type Result = [SetElement, Revalidate];
 
 export type SetElement = (element: Element | null) => void;
 
-export type Revalidate = () => void;
+export interface RevalidateOptions {
+  force?: boolean;
+}
+
+export type Revalidate = (options?: RevalidateOptions) => void;
 
 export function useRect(
   dispatchChange: DispatchChange,
-  options: Options = {}
+  { resize = false }: Options = {}
 ): Result {
   const dispatchChangeRef = useRef(dispatchChange);
   useEffect(() => {
     dispatchChangeRef.current = dispatchChange;
-  });
+  }, [dispatchChange]);
 
-  const optionsRef = useRef(options);
+  const resizeRef = useRef(resize);
   useEffect(() => {
-    optionsRef.current = options;
-  });
+    resizeRef.current = resize;
+    setupResizeObserver();
+  }, [resize]);
 
   const elementRef = useRef<Element | null>(null);
-  const rectRef = useRef<Rect | null>(null);
-
-  const revalidate = useCallback(() => {
-    if (!elementRef.current) {
+  const setElement = useCallback((element: Element | null) => {
+    if (element === elementRef.current) {
       return;
     }
 
-    const nextRect = elementRef.current.getBoundingClientRect();
-
-    if (shouldDispatchRectChange(rectRef.current, nextRect)) {
-      rectRef.current = nextRect;
-
-      const { bottom, height, left, right, top, width, x, y } = nextRect;
-      dispatchChangeRef.current({
-        bottom,
-        height,
-        left,
-        right,
-        top,
-        width,
-        x,
-        y
-      });
-    }
+    elementRef.current = element;
+    revalidate();
+    setupResizeObserver();
   }, []);
+
+  const rectRef = useRef<Rect | null>(null);
+  const revalidate = useCallback(
+    ({ force = false }: RevalidateOptions = {}) => {
+      if (!elementRef.current) {
+        return;
+      }
+
+      const nextRect = elementRef.current.getBoundingClientRect();
+
+      if (force || shouldDispatchRectChange(rectRef.current, nextRect)) {
+        rectRef.current = nextRect;
+        const { bottom, height, left, right, top, width, x, y } = nextRect;
+
+        dispatchChangeRef.current({
+          bottom,
+          height,
+          left,
+          right,
+          top,
+          width,
+          x,
+          y
+        });
+      }
+    },
+    []
+  );
 
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const setupResizeObserver = useCallback(() => {
     if (resizeObserverRef.current) {
       resizeObserverRef.current.disconnect();
+      resizeObserverRef.current = null;
     }
 
-    if (elementRef.current && optionsRef.current.resize) {
-      resizeObserverRef.current = new ResizeObserver(revalidate);
+    if (elementRef.current && resizeRef.current) {
+      resizeObserverRef.current = new ResizeObserver(() => revalidate());
       resizeObserverRef.current.observe(elementRef.current);
     }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect();
-      }
-    };
-  }, []);
-
-  const setElement = useCallback((element: Element | null) => {
-    elementRef.current = element;
-    revalidate();
-    setupResizeObserver();
   }, []);
 
   useIsomorphicLayoutEffect(revalidate);

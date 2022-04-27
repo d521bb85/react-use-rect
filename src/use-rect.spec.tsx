@@ -76,7 +76,7 @@ describe('useRect', () => {
       return (
         <>
           <div ref={rectRef}></div>
-          <button onClick={revalidateRect} />
+          <button onClick={() => revalidateRect()} />
         </>
       );
     }
@@ -91,7 +91,32 @@ describe('useRect', () => {
     });
   });
 
-  it('works together with useState', async () => {
+  it('calls dispatchChange when a bounding rect has not changed on manual revalidation but force option passed', async () => {
+    const dispatchChange = jest.fn();
+
+    function Component() {
+      const [rectRef, revalidateRect] = useRect(dispatchChange);
+
+      return (
+        <>
+          <div ref={rectRef}></div>
+          <button onClick={() => revalidateRect({ force: true })} />
+        </>
+      );
+    }
+
+    render(<Component />);
+
+    const fakeRect = mockRect(0, 0, 100, 300);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button'));
+
+    await waitFor(() => {
+      expect(dispatchChange).toHaveBeenNthCalledWith(3, fakeRect);
+    });
+  });
+
+  it('works well with useState', async () => {
     const fakeRect = mockRect(10, 20, 425, 40);
 
     function Component() {
