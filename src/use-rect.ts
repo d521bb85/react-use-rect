@@ -1,5 +1,9 @@
 import { useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 
+export interface UseRect {
+  (dispatchChange: DispatchChange, options?: Options): Result;
+}
+
 export interface Rect {
   bottom: number;
   height: number;
@@ -11,21 +15,26 @@ export interface Rect {
   y: number;
 }
 
-export type DispatchChange = (rect: Rect) => void;
-
+export interface DispatchChange {
+  (rect: Rect): void;
+}
 export interface Options {
   resize?: boolean;
 }
 
 export type Result = [SetElement, Revalidate];
 
-export type SetElement = (element: Element | null) => void;
+export interface SetElement {
+  (element: Element | null): void;
+}
+
+export interface Revalidate {
+  (options?: RevalidateOptions): void;
+}
 
 export interface RevalidateOptions {
   force?: boolean;
 }
-
-export type Revalidate = (options?: RevalidateOptions) => void;
 
 export function useRect(
   dispatchChange: DispatchChange,

@@ -2,8 +2,7 @@
 
 Utility hook that aims to help with tracking an element's bounding client rect.
 
-It might be found useful for simple cases such as getting element's size and position once it mounted to the DOM.
-As well as for complex ones when an element position changes frequently and needs to be tracked down (e.g. dropdowns and tooltips).
+It might be found useful for simple cases such as getting element's size and position once it mounts to the DOM. As well as for complex ones when an element position changes frequently and needs to be tracked down (e.g. dropdowns and tooltips).
 
 ## Installation
 
@@ -35,20 +34,28 @@ function Example() {
 }
 ```
 
-This hook doesn't make assumption on how you'd like to manage a rect data: save it as a state, put it into a ref or not to store it at all.
+This hook doesn't make assumptions on how you'd like to manage a rect data: save it as a state, put it into a ref or not to store it at all.
 
-In the example above we save our rect into a local state so we use the `useState` hook. However, it's possible to pass to the hook your own function which will be called everytime a rect changes.
+In the example above we save our rect into a local state so we use the `useState` hook. However, it's possible to pass your own function to handle rect changes. Let's call it `dispatchChange` function.
 
 ```tsx
 const [rectRef] = useRect((rect) => console.log(rect.top));
 return <div ref={rectRef} />;
 ```
 
-The hook revalidates an element's bounding rect on each render but calls a passed function only when the element's rect changes.
+The hook revalidates an element's bounding rect on every render but it calls `dispatchChange` only when the element's rect has changed.
 
 ### Resize
 
-You also may want to revalidate the rect when the element's size has changed not as a consequence of rendering (e.g. textarea resized by a user manually). In order to cover this need the `resize` option is introduced.
+You also may want to revalidate the rect when the element's size chages not as a consequence of rendering (e.g. textarea being resized by a user).
+
+In order to cover this need the `resize` option is introduced.
+
+```typescript
+useRect(dispatchChange, { resize: true });
+```
+
+In the following example we'll be watching a textarea resize. Once it being resized we update styles of another element according to the textarea's rect.
 
 ```tsx
 import { useRef } from 'react';
@@ -83,9 +90,34 @@ function Example2() {
 }
 ```
 
-A rect object implements the following interface.
+### Scroll
+
+It's also possible to revalidate a rect when a user scrolled the document, or some transition ended or something else happend and you want to be sure the rect is updated. Just call the `revalidate` function manually.
 
 ```typescript
+const [rectRef, revalidate] = useRect(dispatchChange);
+revalidate();
+```
+
+_Note that both `rectRef` and `revalidate` functions a referentially stable and never changes during a component lifetime._
+
+If you want `dispatchChange` to be called regardless the rect has changed or not use the `force` option.
+
+```typescript
+revalidate({ force: true });
+```
+
+## Reference
+
+```typescript
+interface UseRect {
+  (dispatchChange: DispatchChange, options?: Options): Result;
+}
+
+interface DispatchChange {
+  (rect: Rect): void;
+}
+
 interface Rect {
   bottom: number;
   height: number;
@@ -96,6 +128,22 @@ interface Rect {
   x: number;
   y: number;
 }
-```
 
-_It's the same as [DOMRect](https://developer.mozilla.org/en-US/docs/Web/API/DOMRect)._
+interface Options {
+  resize?: boolean;
+}
+
+type Result = [SetElement, Revalidate];
+
+interface SetElement {
+  (element: Element | null): void;
+}
+
+interface Revalidate {
+  (options?: RevalidateOptions): void;
+}
+
+interface RevalidateOptions {
+  force?: boolean;
+}
+```
