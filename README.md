@@ -101,7 +101,7 @@ revalidate();
 
 _Note that both `rectRef` and `revalidate` functions a referentially stable and never change during a component lifetime._
 
-If you want `dispatchChange` to be called regardless the rect has changed or not use the `force` option.
+If you want `dispatchChange` to be called regardless the rect has changed or not, use the `force` option.
 
 ```typescript
 revalidate({ force: true });
