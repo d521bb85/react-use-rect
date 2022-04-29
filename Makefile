@@ -1,13 +1,22 @@
-.PHONY: clean build-lib build-dts build
+.PHONY: clean build-esm build-cjs build-dts build
 .DEFAULT_GOAL := build
 
 clean:
 	rm -rf dist
 
-build-lib:
+build-esm:
 	npx esbuild src/index.ts \
-		--outdir=dist \
+		--outfile=dist/index.mjs \
 		--format=esm \
+		--target=es6 \
+		--external:react \
+		--bundle \
+		--minify
+
+build-cjs:
+	npx esbuild src/index.ts \
+		--outfile=dist/index.js \
+		--format=cjs \
 		--target=es6 \
 		--external:react \
 		--bundle \
@@ -16,4 +25,4 @@ build-lib:
 build-dts:
 	npx tsc
 
-build: clean build-lib build-dts
+build: clean build-esm build-cjs build-dts
