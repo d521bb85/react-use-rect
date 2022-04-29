@@ -1,2 +1,2 @@
-export * from './types';
-export * from './useRect';
+export * from './use-rect';
+export * from './use-window-on';
