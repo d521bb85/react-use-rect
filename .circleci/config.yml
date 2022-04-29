@@ -1,7 +1,14 @@
 version: 2.1
-orbs:
-  node: circleci/node@3.0.0
+jobs:
+  test:
+    docker:
+      - image: cimg/node:16.12.0
+    steps:
+      - checkout
+      - run: npm ci
+      - run: npm run test
 workflows:
-  node-tests:
+  version: 2
+  test:
     jobs:
-      - node/test
+      - test
