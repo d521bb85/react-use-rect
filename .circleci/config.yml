@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.12.0
+  node: cimg/node:16.12.0
 workflows:
   node-tests:
     jobs:
