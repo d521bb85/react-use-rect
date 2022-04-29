@@ -1,6 +1,6 @@
 {
   "name": "react-use-rect",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "Hook that is aiming to help you on tracking a DOM element boundaries",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",
@@ -27,7 +27,7 @@
     "prepublishOnly": "npm run test && npm run build"
   },
   "peerDependencies": {
-    "react": "^18.1.0"
+    "react": "^17.0.2 || ^18.0.0"
   },
   "devDependencies": {
     "@testing-library/react": "^13.1.1",
