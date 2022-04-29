@@ -47,7 +47,7 @@ The hook revalidates an element's bounding rect on every render but it calls `di
 
 ### Resize
 
-You also may want to revalidate the rect when the element's size chages not as a consequence of rendering (e.g. textarea being resized by a user).
+You may want to revalidate the rect when the element's size chages not as a consequence of rendering (e.g. textarea being resized by a user).
 
 In order to cover this need the `resize` option is introduced.
 
@@ -107,6 +107,27 @@ If you want `dispatchChange` to be called regardless the rect has changed or not
 revalidate({ force: true });
 ```
 
+There is also a one tiny hook included that could come in handy – `useWindowOn`. You can use it to add an event listener to the window and then revalidate a rect once the event captured.
+
+```tsx
+import { useState } from 'react';
+import { useRect, useWindowOn } from 'react-use-rect';
+
+function Example3() {
+  const [top, setTop] = useState<number | null>(null);
+  const [rectRef, revalidate] = useRect((setTop) => setBottom(rect.top));
+  useWindowOn('scroll', () => revalidate());
+
+  return (
+    <div style={{ height: '200vh' }}>
+      <div ref={rectRef} style={{ marginTop: 100 }}>
+        {top !== null && `I'm ${top}px from top.`}
+      </div>
+    </div>
+  );
+}
+```
+
 ## Reference
 
 ```typescript
@@ -145,5 +166,9 @@ interface Revalidate {
 
 interface RevalidateOptions {
   force?: boolean;
+}
+
+interface UseWindowOn<T extends keyof WindowEventMap> {
+  (eventType: T, callback: (event: WindowEventMap[T]) => void): void;
 }
 ```
