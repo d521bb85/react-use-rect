@@ -115,7 +115,7 @@ import { useRect, useWindowOn } from 'react-use-rect';
 
 function Example3() {
   const [top, setTop] = useState<number | null>(null);
-  const [rectRef, revalidate] = useRect((setTop) => setBottom(rect.top));
+  const [rectRef, revalidate] = useRect((rect) => setTop(rect.top));
   useWindowOn('scroll', () => revalidate());
 
   return (
