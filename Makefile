@@ -15,7 +15,7 @@ build-esm:
 
 build-cjs:
 	npx esbuild src/index.ts \
-		--outfile=dist/index.js \
+		--outfile=dist/index.cjs \
 		--format=cjs \
 		--target=es6 \
 		--external:react \
