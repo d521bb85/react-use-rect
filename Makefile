@@ -6,21 +6,19 @@ clean:
 
 build-esm:
 	npx esbuild src/index.ts \
-		--outfile=dist/index.mjs \
+		--outfile=dist/index.esm.js \
 		--format=esm \
 		--target=es6 \
 		--external:react \
-		--bundle \
-		--minify
+		--bundle
 
 build-cjs:
 	npx esbuild src/index.ts \
-		--outfile=dist/index.cjs \
+		--outfile=dist/index.js \
 		--format=cjs \
 		--target=es6 \
 		--external:react \
-		--bundle \
-		--minify
+		--bundle
 
 build-dts:
 	npx tsc
