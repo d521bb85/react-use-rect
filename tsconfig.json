@@ -19,6 +19,5 @@
     "types": [ "bun-types"],
     "rootDir": "./src",
     "outDir": "./dist"
-  },
-  "include": ["./src"]
+  }
 }

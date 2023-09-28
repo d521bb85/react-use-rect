@@ -13,9 +13,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.2.2",
-    "bun-types": "latest"
+    "@types/react": "18.2.23",
+    "bun-types": "latest",
+    "lefthook": "^1.5.0",
+    "react": "18.2.0",
+    "typescript": "5.2.2"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+  "peerDependencies": {}
 }
