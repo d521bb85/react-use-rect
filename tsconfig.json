@@ -5,10 +5,9 @@
     "target": "esnext",
     "moduleResolution": "Bundler",
     "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
+    "incremental": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "composite": true,
     "strict": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
@@ -16,8 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": [ "bun-types"],
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
   }
 }

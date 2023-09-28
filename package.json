@@ -8,15 +8,17 @@
     "test": "bun test",
     "cleanup": "rm -rf ./dist",
     "compile:types": "bunx tsc",
-    "compile:lib": "bun build --minify --target=browser --outfile=./dist/index.js ./src/index.ts",
+    "compile:lib": "bun build --target=browser --external react --outfile=./dist/index.js ./src/index.ts",
     "build": "bun run lint && bun run test && bun run cleanup && bun run compile:types && bun run compile:lib"
   },
   "devDependencies": {
     "@biomejs/biome": "1.2.2",
     "@types/react": "18.2.23",
+    "@types/react-dom": "18.2.8",
     "bun-types": "latest",
     "lefthook": "^1.5.0",
     "react": "18.2.0",
+    "react-dom": "18.2.0",
     "typescript": "5.2.2"
   },
   "peerDependencies": {}
