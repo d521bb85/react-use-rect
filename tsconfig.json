@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "lib": ["DOM", "ESNext"],
     "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "jsx": "react",
+    "target": "esnext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "sourceMap": true,
+    "composite": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "downlevelIteration": true,
     "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "types": [ "bun-types"],
+    "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": ["./src"],
-  "exclude": ["**/*.spec.*"]
+  "include": ["./src"]
 }
