@@ -1,6 +1,6 @@
 {
   "name": "react-use-rect",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Hook that is aiming to help you on tracking a DOM element boundaries",
   "license": "MIT",
   "author": "Vladimir Ivanenko <d521bb85@gmail.com>",
