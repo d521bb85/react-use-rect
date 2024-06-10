@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 
 export interface UseRect {
   (dispatchChange: DispatchChange, options?: Options): Result;
@@ -103,7 +103,7 @@ export function useRect(
     }
   }, []);
 
-  useIsomorphicLayoutEffect(revalidate);
+  useEffect(revalidate);
 
   return [setElement, revalidate];
 }
@@ -125,6 +125,3 @@ function shouldDispatchRectChange(rect: Rect | null, nextRect: Rect) {
     (rect !== nextRect && RECT_KEYS.some((key) => rect[key] !== nextRect[key]))
   );
 }
-
-const useIsomorphicLayoutEffect =
-  typeof window === 'undefined' ? useEffect : useLayoutEffect;
