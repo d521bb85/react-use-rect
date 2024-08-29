@@ -1,8 +1,11 @@
-.PHONY: clean build-esm build-cjs build-dts build
+.PHONY: clean check build-esm build-cjs build-dts build
 .DEFAULT_GOAL := build
 
 clean:
 	rm -rf dist
+
+check:
+	npm run check
 
 build-esm:
 	npx esbuild src/index.ts \
@@ -23,4 +26,4 @@ build-cjs:
 build-dts:
 	npx tsc
 
-build: clean build-esm build-cjs build-dts
+build: clean check build-esm build-cjs build-dts

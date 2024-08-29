@@ -1,12 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-export interface UseWindowOn<T extends keyof WindowEventMap> {
-  (eventType: T, callback: (event: WindowEventMap[T]) => void): void;
-}
+export type UseWindowOn<T extends keyof WindowEventMap> = (
+  eventType: T,
+  callback: (event: WindowEventMap[T]) => void,
+) => void;
 
 export function useWindowOn<T extends keyof WindowEventMap>(
   eventType: T,
-  callback: (event: WindowEventMap[T]) => void
+  callback: (event: WindowEventMap[T]) => void,
 ): void {
   const callbackRef = useRef(callback);
   useEffect(() => {
@@ -14,7 +15,7 @@ export function useWindowOn<T extends keyof WindowEventMap>(
   });
 
   useEffect(() => {
-    if (typeof window === undefined) {
+    if (typeof window === "undefined") {
       return undefined;
     }
 
@@ -24,7 +25,7 @@ export function useWindowOn<T extends keyof WindowEventMap>(
 
     const options: AddEventListenerOptions = {
       capture: true,
-      passive: true
+      passive: true,
     };
 
     window.addEventListener(eventType, listener, options);

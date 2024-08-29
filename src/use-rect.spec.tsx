@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import { Rect, useRect } from './use-rect';
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import React, { useState, useEffect } from "react";
+import { type Rect, useRect } from "./use-rect";
 
 function mockRect(top: number, left: number, width: number, height: number) {
   const windowWidth = 1920;
@@ -15,28 +15,28 @@ function mockRect(top: number, left: number, width: number, height: number) {
     top,
     width,
     x: left,
-    y: top
+    y: top,
   };
 
   jest
-    .spyOn(Element.prototype, 'getBoundingClientRect')
+    .spyOn(Element.prototype, "getBoundingClientRect")
     .mockReturnValue({ ...fakeRect, toJSON: () => fakeRect });
 
   return fakeRect;
 }
 
-describe('useRect', () => {
+describe("useRect", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('calls dispatchChange once gets initial bounding rect', () => {
+  it("calls dispatchChange once gets initial bounding rect", () => {
     const fakeRect = mockRect(0, 0, 100, 200);
     const dispatchChange = jest.fn();
 
     function Component() {
       const [rectRef] = useRect(dispatchChange);
-      return <div ref={rectRef}></div>;
+      return <div ref={rectRef} />;
     }
 
     render(<Component />);
@@ -44,7 +44,7 @@ describe('useRect', () => {
     expect(dispatchChange).toHaveBeenLastCalledWith(fakeRect);
   });
 
-  it('calls dispatchChange when bounding rect changes on re-render', async () => {
+  it("calls dispatchChange when bounding rect changes on re-render", async () => {
     const dispatchChange = jest.fn();
 
     function Component() {
@@ -55,7 +55,7 @@ describe('useRect', () => {
         setTimeout(rerender, 10);
       });
 
-      return <div ref={rectRef}></div>;
+      return <div ref={rectRef} />;
     }
 
     render(<Component />);
@@ -67,7 +67,7 @@ describe('useRect', () => {
     });
   });
 
-  it('calls dispatchChange when a bounding rect changes detected on manual revalidation', async () => {
+  it("calls dispatchChange when a bounding rect changes detected on manual revalidation", async () => {
     const dispatchChange = jest.fn();
 
     function Component() {
@@ -75,8 +75,8 @@ describe('useRect', () => {
 
       return (
         <>
-          <div ref={rectRef}></div>
-          <button onClick={() => revalidateRect()} />
+          <div ref={rectRef} />
+          <button type="button" onClick={() => revalidateRect()} />
         </>
       );
     }
@@ -84,14 +84,14 @@ describe('useRect', () => {
     render(<Component />);
 
     const fakeRect = mockRect(0, 0, 100, 300);
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole("button"));
 
     await waitFor(() => {
       expect(dispatchChange).toHaveBeenLastCalledWith(fakeRect);
     });
   });
 
-  it('calls dispatchChange when a bounding rect has not changed on manual revalidation but force option passed', async () => {
+  it("calls dispatchChange when a bounding rect has not changed on manual revalidation but force option passed", async () => {
     const dispatchChange = jest.fn();
 
     function Component() {
@@ -99,8 +99,11 @@ describe('useRect', () => {
 
       return (
         <>
-          <div ref={rectRef}></div>
-          <button onClick={() => revalidateRect({ force: true })} />
+          <div ref={rectRef} />
+          <button
+            type="button"
+            onClick={() => revalidateRect({ force: true })}
+          />
         </>
       );
     }
@@ -108,22 +111,22 @@ describe('useRect', () => {
     render(<Component />);
 
     const fakeRect = mockRect(0, 0, 100, 300);
-    fireEvent.click(screen.getByRole('button'));
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("button"));
 
     await waitFor(() => {
       expect(dispatchChange).toHaveBeenNthCalledWith(3, fakeRect);
     });
   });
 
-  it('works well with useState', async () => {
+  it("works well with useState", async () => {
     const fakeRect = mockRect(10, 20, 425, 40);
 
     function Component() {
       const [rect, setRect] = useState<Rect | undefined>();
       const [rectRef] = useRect(setRect);
 
-      return <div ref={rectRef}>{rect && rect.width}</div>;
+      return <div ref={rectRef}>{rect?.width}</div>;
     }
 
     render(<Component />);

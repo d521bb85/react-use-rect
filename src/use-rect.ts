@@ -1,8 +1,9 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
-export interface UseRect {
-  (dispatchChange: DispatchChange, options?: Options): Result;
-}
+export type UseRect = (
+  dispatchChange: DispatchChange,
+  options?: Options,
+) => Result;
 
 export interface Rect {
   bottom: number;
@@ -15,22 +16,16 @@ export interface Rect {
   y: number;
 }
 
-export interface DispatchChange {
-  (rect: Rect): void;
-}
+export type DispatchChange = (rect: Rect) => void;
 export interface Options {
   resize?: boolean;
 }
 
 export type Result = [SetElement, Revalidate];
 
-export interface SetElement {
-  (element: Element | null): void;
-}
+export type SetElement = (element: Element | null) => void;
 
-export interface Revalidate {
-  (options?: RevalidateOptions): void;
-}
+export type Revalidate = (options?: RevalidateOptions) => void;
 
 export interface RevalidateOptions {
   force?: boolean;
@@ -38,7 +33,7 @@ export interface RevalidateOptions {
 
 export function useRect(
   dispatchChange: DispatchChange,
-  { resize = false }: Options = {}
+  { resize = false }: Options = {},
 ): Result {
   const dispatchChangeRef = useRef(dispatchChange);
   useEffect(() => {
@@ -83,11 +78,11 @@ export function useRect(
           top,
           width,
           x,
-          y
+          y,
         });
       }
     },
-    []
+    [],
   );
 
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -101,7 +96,7 @@ export function useRect(
       resizeObserverRef.current = new ResizeObserver(() => revalidate());
       resizeObserverRef.current.observe(elementRef.current);
     }
-  }, []);
+  }, [revalidate]);
 
   useEffect(revalidate);
 
@@ -109,14 +104,14 @@ export function useRect(
 }
 
 const RECT_KEYS = [
-  'bottom',
-  'height',
-  'left',
-  'right',
-  'top',
-  'width',
-  'x',
-  'y'
+  "bottom",
+  "height",
+  "left",
+  "right",
+  "top",
+  "width",
+  "x",
+  "y",
 ] as const;
 
 function shouldDispatchRectChange(rect: Rect | null, nextRect: Rect) {
